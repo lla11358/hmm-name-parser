@@ -121,6 +121,9 @@ def main():
         last_name_2_dist, first_name_tokens, last_name_1_tokens
         )
 
+    print(first_name_dist)
+    print(last_name_1_dist)
+    print(last_name_2_dist)
     # States of the model
     first_name = State(DiscreteDistribution(
         first_name_dist), name='First Name'
