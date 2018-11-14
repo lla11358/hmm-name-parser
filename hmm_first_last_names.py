@@ -23,7 +23,7 @@ separators = '[^-, ]+'
 first_name_file = './data/raw_first_name.txt'
 last_name_1_file = './data/raw_last_name_1.txt'
 last_name_2_file = './data/raw_last_name_2.txt'
-test_set_file = './data/test_set.txt'
+test_set_file = './input/test_set.txt'
 
 
 def extract_tokens(file_name, pattern):
@@ -149,10 +149,16 @@ def main():
     model.bake(verbose=True)
 
     # Testing the model
+    """
+    # Using a test set file
     for line in open(test_set_file):
         observation = line.strip('\n')
         sequence = observation.split()
-
+    """
+    for i in range(0, 49):
+        i += 1
+        sequence = model.sample()
+        observation = ' '.join(sequence)
         # Probability of this sequence
         print('Observation: ' + observation)
         try:
