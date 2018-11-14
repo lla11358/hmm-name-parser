@@ -23,6 +23,7 @@ separators = '[^-, ]+'
 first_name_file = './data/raw_first_name.txt'
 last_name_1_file = './data/raw_last_name_1.txt'
 last_name_2_file = './data/raw_last_name_2.txt'
+test_set_file = './data/test_set.txt'
 
 
 def extract_tokens(file_name, pattern):
@@ -86,8 +87,9 @@ def discrete_distribution(prob_dist, tokens_1, tokens_2):
         prob_dist (dict): input probability distribution + added tokens
 
     """
-    # Join tokens_1 and tokens_2, without repetition
-    tokens = list(set().union(tokens_1, tokens_2))
+    # Join (union) tokens_1 and tokens_2, without repetition
+    tokens = set(tokens_1) | set(tokens_2)
+    tokens = set(tokens)
     # Add tokens to prob_dist with probability = 0
     for token in tokens:
         if token not in prob_dist:
@@ -121,18 +123,22 @@ def main():
         last_name_2_dist, first_name_tokens, last_name_1_tokens
         )
 
-    print(first_name_dist)
-    print(last_name_1_dist)
-    print(last_name_2_dist)
+    # Debugging
+    """
+    print(len(first_name_dist))
+    print(len(last_name_1_dist))
+    print(len(last_name_2_dist))
+    """
+
     # States of the model
     first_name = State(DiscreteDistribution(
-        first_name_dist), name='First Name'
+        first_name_dist), name='FirstName'
         )
     last_name_1 = State(DiscreteDistribution(
-        last_name_1_dist), name='Last Name 1'
+        last_name_1_dist), name='LastName1'
         )
     last_name_2 = State(DiscreteDistribution(
-        last_name_2_dist), name='Last Name 2'
+        last_name_2_dist), name='LastName2'
         )
 
     # Transition probabilities
@@ -149,35 +155,24 @@ def main():
     # "Bake" the model, finalizing its structure
     model.bake(verbose=True)
 
-    # Test
-    observation = 'ALBERTO ALEJO DE LA CORTE WILSON'
-    sequence = observation.split()
+    # Testing the model
+    for line in open(test_set_file):
+        observation = line.strip('\n')
+        sequence = observation.split()
 
-    # Probability of this sequence
-    print('Observation: ' + observation)
-    print('P(sequence) = ' + str(
-        math.e**model.forward(sequence)[len(sequence), model.end_index]))
-
-    # Probability of token 2 = last_name_1
-    print(
-        math.e**model.forward_backward(sequence)
-        [1][2, model.states.index(last_name_1)]
-    )
-    # Probability of token 2 = last_name_2
-    print(
-        math.e**model.forward_backward(sequence)
-        [1][2, model.states.index(last_name_2)]
-    )
-    # Probability of token 0 = first_name
-    print(
-        math.e**model.forward_backward(sequence)
-        [1][0, model.states.index(first_name)]
-    )
-    # Probability of the sequence given it is first_name at token 1
-    print(math.e**model.backward(sequence)[1, model.states.index(first_name)])
-    # Probable series of states given the above sequence
-    print(' '.join(state.name for i, state in model.maximum_a_posteriori(
-        sequence)[1]))
+        # Probability of this sequence
+        print('Observation: ' + observation)
+        try:
+            print('P(sequence) = ' + str(math.e**model.forward(
+                    sequence)[len(sequence), model.end_index]))
+            # Probable series of states given the above sequence
+            print(' '.join(
+                state.name for i, state in model.maximum_a_posteriori(
+                    sequence)[1]))
+        except ValueError as ve:
+            print(ve)
+        finally:
+            print('--')
 
 
 if __name__ == '__main__':
