@@ -60,7 +60,7 @@ def probability_distribution(tokens):
     """
     token_count = 0
     prob_dist = {}
-    # Frequencies of each token
+    # Frequency of each token
     for token in tokens:
         token_count += 1
         if token not in prob_dist:
@@ -122,13 +122,6 @@ def main():
     last_name_2_dist = discrete_distribution(
         last_name_2_dist, first_name_tokens, last_name_1_tokens
         )
-
-    # Debugging
-    """
-    print(len(first_name_dist))
-    print(len(last_name_1_dist))
-    print(len(last_name_2_dist))
-    """
 
     # States of the model
     first_name = State(DiscreteDistribution(
