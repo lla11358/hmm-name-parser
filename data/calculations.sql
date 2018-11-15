@@ -65,3 +65,31 @@ where
 -- P(last_name_2 -> END) = 550785 / 583409 = 0.944080396
 -- Card(composed last_name_2) = 583409 - 550785 = 32624
 -- P(last_name_2 -> last_name_2) = 32624 / 583409 = 0.055919604
+
+-- Obtención de listados de nombres y apellidos
+select
+    nomb
+from
+    seguridad.pmh_dn
+where
+    nomb is not null and
+    anno = 2018 and
+    semestre = 2;
+
+select
+    part1, ape1
+from
+    seguridad.pmh_dn
+where
+    ape1 is not null and
+    anno = 2018 and
+    semestre = 2;
+
+select
+    part2, ape2
+from
+    seguridad.pmh_dn
+where
+    ape2 is not null and
+    anno = 2018 and
+    semestre = 2;

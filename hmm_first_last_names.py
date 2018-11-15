@@ -9,21 +9,14 @@ Considered tokens:
     first_name -> person names + particles
     last_names -> family names + particles
     particles -> DE, DEL, LO, LOS, LA, DO, DU, Y
-    separator -> [ -,]+
+    separator -> [ ,]+
     Dot (.) as abbreviation is considered part of the name.
 """
 
 from pomegranate import HiddenMarkovModel, DiscreteDistribution, State
 import re
 import math
-
-# Pattern defining the token separators
-separators = '[^-, ]+'
-# Raw data files
-first_name_file = './data/raw_first_name.txt'
-last_name_1_file = './data/raw_last_name_1.txt'
-last_name_2_file = './data/raw_last_name_2.txt'
-test_set_file = './input/test_set.txt'
+import config
 
 
 def extract_tokens(file_name, pattern):
@@ -39,9 +32,13 @@ def extract_tokens(file_name, pattern):
     """
     tokens = []
     for line in open(file_name):
-        line = line.strip('\n').strip()
+        # Some cleaning
+        line = line.strip('\n')
+        line = line.replace(' - ', '-')
+        line = line.replace('"', '')
+        line = line.replace('\t', ' ').strip()
         # List of tokens from each line
-        line_tokens = re.findall(pattern, line)
+        line_tokens = re.split(pattern, line)
         for line_token in line_tokens:
             tokens.append(line_token)
     return tokens
@@ -103,9 +100,12 @@ def main():
     model = HiddenMarkovModel(name="First-Last-Names")
 
     # Extract tokens from the training sets
-    first_name_tokens = extract_tokens(first_name_file, separators)
-    last_name_1_tokens = extract_tokens(last_name_1_file, separators)
-    last_name_2_tokens = extract_tokens(last_name_2_file, separators)
+    first_name_tokens = extract_tokens(
+        config.first_name_file, config.separators)
+    last_name_1_tokens = extract_tokens(
+        config.last_name_1_file, config.separators)
+    last_name_2_tokens = extract_tokens(
+        config.last_name_2_file, config.separators)
 
     # Calculate probability distributions for each token set
     first_name_dist = probability_distribution(first_name_tokens)
@@ -136,6 +136,8 @@ def main():
 
     # Transition probabilities
     # Obtained from a huge dataset of names
+    # Graph for FirstName LastName1 LastName2 sequences
+    """
     model.add_transition(model.start, first_name, 1)
     model.add_transition(first_name, first_name, 0.349495808)
     model.add_transition(first_name, last_name_1, 0.650504192)
@@ -144,26 +146,31 @@ def main():
     model.add_transition(last_name_1, model.end, 0.033753336)
     model.add_transition(last_name_2, last_name_2, 0.055919604)
     model.add_transition(last_name_2, model.end, 0.944080396)
+    """
+    # Graph for LastName1 LastName2 FirstName sequences
+    model.add_transition(model.start, last_name_1, 1)
+    model.add_transition(last_name_1, last_name_1, 0.02401917)
+    model.add_transition(last_name_1, last_name_2, 0.942227494)
+    model.add_transition(last_name_1, first_name, 0.033753336)
+    model.add_transition(last_name_2, last_name_2, 0.055919604)
+    model.add_transition(last_name_2, first_name, 0.944080396)
+    model.add_transition(first_name, first_name, 0.349495808)
+    model.add_transition(first_name, model.end, 0.650504192)
 
     # "Bake" the model, finalizing its structure
     model.bake(verbose=True)
 
     # Testing the model
-    """
-    # Using a test set file
-    for line in open(test_set_file):
+    for line in open(config.test_set_file):
         observation = line.strip('\n')
         sequence = observation.split()
-    """
-    for i in range(0, 49):
-        i += 1
-        sequence = model.sample()
-        observation = ' '.join(sequence)
         # Probability of this sequence
-        print('Observation: ' + observation)
+        print(observation)
         try:
+            """
             print('P(sequence) = ' + str(math.e**model.forward(
                     sequence)[len(sequence), model.end_index]))
+            """
             # Probable series of states given the above sequence
             print(' '.join(
                 state.name for i, state in model.maximum_a_posteriori(
