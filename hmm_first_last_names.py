@@ -6,9 +6,10 @@ Pomegranate documentation:
 Code example:
     https://github.com/jmschrei/pomegranate/blob/master/examples/hmm_rainy_sunny.ipynb
 Considered tokens:
-    first_name -> person names + particles
-    last_names -> family names + particles
-    particles -> DE, DEL, LO, LOS, LA, DO, DU, Y
+    first_name -> person names
+    last_names -> family names
+    particles -> DA|DE|DE LA|DE LAS|DE LOS|DEL|DI|DL|DO|DOS|EL|
+        EP|I|LA|LAS|LOS|LE|SAN|VAN
     separator -> [ ,]+
     Dot (.) as abbreviation is considered part of the name.
 """
@@ -134,28 +135,29 @@ def main():
         last_name_2_dist), name='LastName2'
         )
 
+    # TODO: rebuild graphs of states and transitions
     # Transition probabilities
     # Obtained from a huge dataset of names
-    # Graph for FirstName LastName1 LastName2 sequences
-    """
-    model.add_transition(model.start, first_name, 1)
-    model.add_transition(first_name, first_name, 0.349495808)
-    model.add_transition(first_name, last_name_1, 0.650504192)
-    model.add_transition(last_name_1, last_name_1, 0.02401917)
-    model.add_transition(last_name_1, last_name_2, 0.942227494)
-    model.add_transition(last_name_1, model.end, 0.033753336)
-    model.add_transition(last_name_2, last_name_2, 0.055919604)
-    model.add_transition(last_name_2, model.end, 0.944080396)
-    """
-    # Graph for LastName1 LastName2 FirstName sequences
-    model.add_transition(model.start, last_name_1, 1)
-    model.add_transition(last_name_1, last_name_1, 0.02401917)
-    model.add_transition(last_name_1, last_name_2, 0.942227494)
-    model.add_transition(last_name_1, first_name, 0.033753336)
-    model.add_transition(last_name_2, last_name_2, 0.055919604)
-    model.add_transition(last_name_2, first_name, 0.944080396)
-    model.add_transition(first_name, first_name, 0.349495808)
-    model.add_transition(first_name, model.end, 0.650504192)
+    if config.graph_type == config.graph_types[0]:
+        # Graph for FirstName LastName1 LastName2 sequences
+        model.add_transition(model.start, first_name, 1)
+        model.add_transition(first_name, first_name, 0.349495808)
+        model.add_transition(first_name, last_name_1, 0.650504192)
+        model.add_transition(last_name_1, last_name_1, 0.02401917)
+        model.add_transition(last_name_1, last_name_2, 0.942227494)
+        model.add_transition(last_name_1, model.end, 0.033753336)
+        model.add_transition(last_name_2, last_name_2, 0.055919604)
+        model.add_transition(last_name_2, model.end, 0.944080396)
+    else:
+        # Graph for LastName1 LastName2 FirstName sequences
+        model.add_transition(model.start, last_name_1, 1)
+        model.add_transition(last_name_1, last_name_1, 0.02401917)
+        model.add_transition(last_name_1, last_name_2, 0.942227494)
+        model.add_transition(last_name_1, first_name, 0.033753336)
+        model.add_transition(last_name_2, last_name_2, 0.055919604)
+        model.add_transition(last_name_2, first_name, 0.944080396)
+        model.add_transition(first_name, first_name, 0.349495808)
+        model.add_transition(first_name, model.end, 0.650504192)
 
     # "Bake" the model, finalizing its structure
     model.bake(verbose=True)
@@ -168,6 +170,7 @@ def main():
         print(observation)
         try:
             """
+            # Probability of the given sequence
             print('P(sequence) = ' + str(math.e**model.forward(
                     sequence)[len(sequence), model.end_index]))
             """

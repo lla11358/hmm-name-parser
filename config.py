@@ -2,6 +2,9 @@
 
 # Pattern defining the token separators
 separators = '[ ,]+'
+# Graph types: first name first or last name first
+graph_types = ['FN', 'LN']
+graph_type = graph_types[0]
 # Raw data files
 first_name_file = '/home/lla11358/data/dumps/raw_nomb.txt'
 last_name_1_file = '/home/lla11358/data/dumps/raw_ape1.tsv'
