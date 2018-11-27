@@ -1,0 +1,20 @@
+@startuml Name Parser State Diagram - Last name 1 first
+
+[*] --> LN1: 0.990
+[*] --> PLN1: 0.010
+LN1 --> LN1: 0.005
+LN1 --> PLN1: 0.005
+LN1 --> LN2: 0.945
+LN1 --> PLN2: 0.001
+LN1 --> FN: 0.034
+PLN1 --> LN1: 1
+LN2 --> LN2: 0.004
+LN2 --> PLN2: 0.004
+LN2 --> FN: 0.992
+PLN2 --> LN2: 1
+FN --> FN: 0.334
+FN --> PFN: 0.010
+FN --> [*]: 0.656
+PFN --> FN: 1
+
+@enduml
