@@ -44,7 +44,7 @@ def subtokens(tokens, length, particles):
     subtokens = []
     for token in tokens:
         if token not in particles:
-            subtoken = token[-4:]
+            subtoken = token[-length:]
         else:
             subtoken = token
         subtokens.append(subtoken)

@@ -14,8 +14,8 @@ States:
     PLN2 -> particle of last name 2
 Tokens:
     - last 4 characters of first name or last name (1 and 2)
-    - particles = '(da|de|de la|de las|de los|del|di|dl|
-                    do|dos|el|ep|i|la|las|los|le|san|van)'
+    - particles = '( da | de | de la | de las | de los | del | di | dl |
+                     do | dos | el | ep | i | la | las | los | le | san | van )'
 
 """
 
@@ -175,8 +175,8 @@ def main():
         model.add_transition(fn, ln1, 0.648)
         model.add_transition(fn, pln1, 0.008)
         model.add_transition(pfn, fn, 1)
-        model.add_transition(ln1, ln1, 0.005)
-        model.add_transition(ln1, pln1, 0.005)
+        model.add_transition(ln1, ln1, 0.010)
+        model.add_transition(ln1, pln1, 0.010)
         model.add_transition(ln1, ln2, 0.945)
         model.add_transition(ln1, pln2, 0.001)
         model.add_transition(ln1, model.end, 0.034)
@@ -189,8 +189,8 @@ def main():
         # Graph for LastName1 LastName2 FirstName sequences
         model.add_transition(model.start, ln1, 0.990)
         model.add_transition(model.start, pln1, 0.010)
-        model.add_transition(ln1, ln1, 0.005)
-        model.add_transition(ln1, pln1, 0.005)
+        model.add_transition(ln1, ln1, 0.010)
+        model.add_transition(ln1, pln1, 0.010)
         model.add_transition(ln1, ln2, 0.945)
         model.add_transition(ln1, pln2, 0.001)
         model.add_transition(ln1, fn, 0.034)

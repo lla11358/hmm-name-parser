@@ -9,8 +9,6 @@ import unicodedata
 
 
 def unicode(str):
-    """
-    Normalize unicode data to remove umlauts, accents etc.
-    """
+    """Normalize unicode data to remove umlauts, accents etc."""
     return unicodedata.normalize(
         'NFKD', str).encode('ASCII', 'ignore').decode('utf-8')
