@@ -31,11 +31,11 @@ subtoken_length = 3
 graph_types = ['FNF', 'LNF']
 graph_type = graph_types[0]
 # Raw data files
-data_dir = '/home/lla11358/data/HMM/'
+data_dir = '/home/lla11358/data/git/python/hmm-name-parser/data/'
 staging_dir = data_dir + 'staging/'
 input_dir = data_dir + 'input/'
 output_dir = data_dir + 'output/'
-fn_file = staging_dir + 'first_name.csv'
-ln1_file = staging_dir + 'last_name1.csv'
-ln2_file = staging_dir + 'last_name2.csv'
+fn_file = ['mujeres.csv', 'hombres.csv']
+ln_file = ['apellidos.csv', 'apellidos-20.csv']
 test_set_file = input_dir + 'test_set_fnf.txt'
+encoding = 'utf-8'
