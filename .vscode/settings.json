@@ -1,4 +1,10 @@
 {
     "python.linting.pylintEnabled": true,
-    "python.pythonPath": "env/bin/python"
+    "python.pythonPath": "env/bin/python3",
+    "python.venvFolders": [
+        "env",
+        "envs",
+        ".pyenv",
+        ".direnv"
+    ]
 }
