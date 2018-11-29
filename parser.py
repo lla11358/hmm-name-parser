@@ -23,7 +23,6 @@ from pomegranate import HiddenMarkovModel, DiscreteDistribution, State
 import re
 import math
 import config
-import normalizer
 import tokenizer
 
 
@@ -42,7 +41,7 @@ def extract_tokens(file_name):
     particle_tokens = []
     for line in open(file_name):
         line = line.strip('\n')
-        line = normalizer.unicode(line)
+        line = tokenizer.unicode(line)
         # List of tokens from each line
         line_tokens = tokenizer.split_sequence(line, config.token_pattern)
         line_tokens = tokenizer.subtokens(
@@ -210,7 +209,7 @@ def main():
     # Testing the model
     for line in open(config.test_set_file):
         observation = line.strip('\n')
-        norm_observation = normalizer.unicode(observation)
+        norm_observation = tokenizer.unicode(observation)
         sequence = tokenizer.split_sequence(
             norm_observation.lower(), config.token_pattern)
         sequence = tokenizer.subtokens(

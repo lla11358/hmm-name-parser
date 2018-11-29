@@ -1,29 +1,36 @@
 """Configuration file for hmm_name_parser.py."""
 
 # Pattern used to extract particles and tokens
-token_pattern = \
-    '( de la | de las | de los| del | da | de | di | do | dos | el | i |' + \
-    ' la | las | los | le | san | van | y |[a-z-]+)'
-# List of particles
+token_pattern = '([a-z-]+)'
+# List of particles for first name and last_name
 particles = [
-    ' da ',
-    ' de la ',
-    ' de las ',
-    ' de los ',
-    ' del ',
-    ' de ',
-    ' di ',
-    ' do ',
-    ' dos ',
-    ' el ',
-    ' i ',
-    ' la ',
-    ' las ',
-    ' los ',
-    ' le ',
-    ' san ',
-    ' van ',
-    ' y '
+    'ben',
+    'da',
+    'das',
+    'de',
+    'de la',
+    'de las',
+    'de los',
+    'del',
+    'des',
+    'di',
+    'do',
+    'dos',
+    'du',
+    'el',
+    'i',
+    'la',
+    'le',
+    'lo',
+    'mac',
+    'mc',
+    'san',
+    'st',
+    'van',
+    'van den',
+    'van der',
+    'von',
+    'y'
 ]
 # Length of subtokens
 subtoken_length = 3

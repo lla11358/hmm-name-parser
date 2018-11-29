@@ -6,6 +6,13 @@ Functions to extract tokens from string sequences.
 """
 
 import re
+import unicodedata
+
+
+def unicode(str):
+    """Normalize unicode data to remove accents, etc."""
+    return unicodedata.normalize(
+        'NFKD', str).encode('ASCII', 'ignore').decode('utf-8')
 
 
 def split_sequence(sequence, pattern):

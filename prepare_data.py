@@ -8,7 +8,6 @@ Obtains discrete probability distributions from source data.
 """
 
 import pandas
-import normalizer
 import tokenizer
 import config
 
@@ -29,7 +28,8 @@ def main():
             encoding=config.encoding
         )
         list.append(df)
-    first_name_df = pandas.concat(list, axis=0, ignore_index=True)
+    first_name = pandas.concat(list, axis=0, ignore_index=True)
+    first_name = first_name.dropna(axis='rows')
 
     list = []
     for file in config.ln_file:
@@ -39,10 +39,9 @@ def main():
             encoding=config.encoding
         )
         list.append(df)
-    last_name_df = pandas.concat(list, axis=0, ignore_index=True)
+    last_name = pandas.concat(list, axis=0, ignore_index=True)
+    last_name = last_name.dropna(axis='rows')
 
-    # Extract tokens
-    
 
 if __name__ == '__main__':
     main()
