@@ -42,6 +42,28 @@ def main():
     last_name = pandas.concat(list, axis=0, ignore_index=True)
     last_name = last_name.dropna(axis='rows')
 
+    # Generate dictionaries of tokens and its frequencies
+    tokens = {}
+    for index, row in first_name.iterrows():
+        name = tokenizer.unicode(row['nombre'])
+        freq = row['frec']
+        token_list = tokenizer.split_sequence(name, config.token_pattern)
+
+    for line in open(file_name):
+        line = line.strip('\n')
+        line = tokenizer.unicode(line)
+        # List of tokens from each line
+        line_tokens = tokenizer.split_sequence(line, config.token_pattern)
+        line_tokens = tokenizer.subtokens(
+            line_tokens, config.subtoken_length, config.particles)
+        for token in line_tokens:
+            if token in config.particles:
+                particle_tokens.append(token)
+            else:
+                name_tokens.append(token)
+    return tokens
+
+
 
 if __name__ == '__main__':
     main()

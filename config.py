@@ -1,17 +1,16 @@
 """Configuration file for hmm_name_parser.py."""
 
-# Pattern used to extract particles and tokens
-token_pattern = '([a-z-]+)'
+# Pattern used to extract tokens
+token_pattern = '([a-z-]+|ben|da|das|de|del|den|der|des|di|do|dos|du|el|i|la|las|le|lo|los|mac|mc|san|st|van|von|y)+'
 # List of particles for first name and last_name
 particles = [
     'ben',
     'da',
     'das',
     'de',
-    'de la',
-    'de las',
-    'de los',
     'del',
+    'den',
+    'der',
     'des',
     'di',
     'do',
@@ -20,15 +19,15 @@ particles = [
     'el',
     'i',
     'la',
+    'las',
     'le',
     'lo',
+    'los',
     'mac',
     'mc',
     'san',
     'st',
     'van',
-    'van den',
-    'van der',
     'von',
     'y'
 ]

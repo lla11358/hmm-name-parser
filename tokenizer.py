@@ -17,7 +17,7 @@ def unicode(str):
 
 def split_sequence(sequence, pattern):
     """
-    Splits a sequence of words into a list of tokens.
+    Split a sequence of words into a list of tokens.
 
     Parameters:
         sequence (str): string containing tokens.
@@ -27,6 +27,7 @@ def split_sequence(sequence, pattern):
     Returns:
         tokens (list): list of tokens.
             Ex.: ['eva', 'maria', 'de los', 'angeles', 'rodriguez', 'lopez']
+
     """
     return re.findall(pattern, sequence)
 

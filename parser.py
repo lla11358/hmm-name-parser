@@ -26,34 +26,6 @@ import config
 import tokenizer
 
 
-def extract_tokens(file_name):
-    """
-    Extract all tokens found in a raw data file.
-
-    Parameters:
-        file_name (str): path of the file containing raw data
-        pattern (str): regular expression used to identify separators
-    Returns:
-        tokens (list)
-
-    """
-    name_tokens = []
-    particle_tokens = []
-    for line in open(file_name):
-        line = line.strip('\n')
-        line = tokenizer.unicode(line)
-        # List of tokens from each line
-        line_tokens = tokenizer.split_sequence(line, config.token_pattern)
-        line_tokens = tokenizer.subtokens(
-            line_tokens, config.subtoken_length, config.particles)
-        for token in line_tokens:
-            if token in config.particles:
-                particle_tokens.append(token)
-            else:
-                name_tokens.append(token)
-    return name_tokens, particle_tokens
-
-
 def probability_distribution(subtokens):
     """
     Calculate the probabilities for each token in a given list.
