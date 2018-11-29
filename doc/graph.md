@@ -1,5 +1,7 @@
 # Graph of states and transitions
 
+TODO: recalculate probabilities using new data files.
+
 ## States
 
 + START: initial state
@@ -119,17 +121,20 @@ FN --> FN: 0.334
 FN --> PFN: 0.010
 FN --> LN1: 0.648
 FN --> PLN1: 0.008
-PFN --> FN: 1
-LN1 --> LN1: 0.005
-LN1 --> PLN1: 0.005
+PFN --> PFN: 0.150
+PFN --> FN: 0.850
+LN1 --> LN1: 0.010
+LN1 --> PLN1: 0.010
 LN1 --> LN2: 0.945
 LN1 --> PLN2: 0.001
 LN1 --> [*]: 0.034
-PLN1 --> LN1: 1
+PLN1 --> PLN1: 0.150
+PLN1 --> LN1: 0.850
 LN2 --> LN2: 0.004
 LN2 --> PLN2: 0.004
 LN2 --> [*]: 0.992
-PLN2 --> LN2: 1
+PLN2 --> PLN2: 0.150
+PLN2 --> LN2: 0.850
 @enduml
 ```
 
@@ -139,19 +144,22 @@ PLN2 --> LN2: 1
 @startuml
 [*] --> LN1: 0.990
 [*] --> PLN1: 0.010
-LN1 --> LN1: 0.005
-LN1 --> PLN1: 0.005
+LN1 --> LN1: 0.010
+LN1 --> PLN1: 0.010
 LN1 --> LN2: 0.945
 LN1 --> PLN2: 0.001
 LN1 --> FN: 0.034
-PLN1 --> LN1: 1
+PLN1 --> PLN1: 0.150
+PLN1 --> LN1: 0.850
 LN2 --> LN2: 0.004
 LN2 --> PLN2: 0.004
 LN2 --> FN: 0.992
-PLN2 --> LN2: 1
+PLN2 --> PLN2: 0.150
+PLN2 --> LN2: 0.850
 FN --> FN: 0.334
 FN --> PFN: 0.010
 FN --> [*]: 0.656
-PFN --> FN: 1
+PFN --> PFN: 0.150
+PFN --> FN: 0.850
 @enduml
 ```

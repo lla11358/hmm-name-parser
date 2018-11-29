@@ -1,7 +1,9 @@
 """Configuration file for hmm_name_parser.py."""
 
-# Pattern used to extract tokens
-token_pattern = '([a-z-]+|ben|da|das|de|del|den|der|des|di|do|dos|du|el|i|la|las|le|lo|los|mac|mc|san|st|van|von|y)+'
+# Text case for generate tokens: 'upper' | 'lower' | None
+text_case = 'lower'
+# Pattern used to extract words
+word_pattern = '([a-z-]+)+'
 # List of particles for first name and last_name
 particles = [
     'ben',
@@ -31,17 +33,25 @@ particles = [
     'von',
     'y'
 ]
-# Length of subtokens
-subtoken_length = 3
+# Length of tokens
+token_length = 3
 # Graph types: First Name first or Last Name first
 graph_types = ['FNF', 'LNF']
-graph_type = graph_types[0]
+graph_type = graph_types[1]
 # Raw data files
-data_dir = '/home/lla11358/data/git/python/hmm-name-parser/data/'
-staging_dir = data_dir + 'staging/'
-input_dir = data_dir + 'input/'
-output_dir = data_dir + 'output/'
+staging_dir = 'data/staging/'
+input_dir = 'data/input/'
+output_dir = 'data/output/'
 fn_file = ['mujeres.csv', 'hombres.csv']
 ln_file = ['apellidos.csv', 'apellidos-20.csv']
-test_set_file = input_dir + 'test_set_fnf.txt'
+test_set_file = input_dir + 'test_set_lnf.txt'
 encoding = 'utf-8'
+# Token files
+token_files = {
+    'first_name': 'first_name_tokens.dict',
+    'part_first_name': 'part_first_name_tokens.dict',
+    'last_name1': 'last_name1_tokens.dict',
+    'part_last_name1': 'part_last_name1_tokens.dict',
+    'last_name2': 'last_name2_tokens.dict',
+    'part_last_name2': 'part_last_name2_tokens.dict'
+}

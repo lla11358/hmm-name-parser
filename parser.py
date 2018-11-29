@@ -21,99 +21,80 @@ Tokens:
 
 from pomegranate import HiddenMarkovModel, DiscreteDistribution, State
 import re
-import math
 import config
-import tokenizer
-
-
-def probability_distribution(subtokens):
-    """
-    Calculate the probabilities for each token in a given list.
-
-    Parameters:
-        subtokens (list): list containing subtokens
-
-    Returns:
-        prob_dist (dict): dictionary of subtoken-probability pairs
-
-    """
-    subtoken_count = 0
-    prob_dist = {}
-    # Frequency of each token
-    for subtoken in subtokens:
-        subtoken_count += 1
-        if subtoken not in prob_dist:
-            prob_dist[subtoken] = 1
-        else:
-            prob_dist[subtoken] += 1
-    # Calculate probabilities
-    for key, value in prob_dist.items():
-        prob_dist[key] = float(value) / float(subtoken_count)
-    return prob_dist
+import utils
 
 
 def discrete_distribution(
-        prob_dist, subtokens1, subtokens2, subtokens3, subtokens4, subtokens5):
+        prob_dist, tokens1, tokens2, tokens3, tokens4, tokens5):
     """
-    Add subtokens from other states to a given probability distribution.
+    Add tokens from other states to a given probability distribution.
 
-    Added subtokens have probability = 0.
+    Added tokens have probability = 0.
 
     Parameters:
-        prob_dist (dict): probability distribution of a given state
-        subtokens1..subtokens5 (list): subtokens of another states
+        prob_dist (dict): probability distribution of a given state.
+        tokens1..tokens5 (list): tokens of another states,
+        without associated probabilities.
 
     Returns:
-        prob_dist (dict): input probability distribution + added subtokens
+        prob_dist (dict): input probability distribution + added tokens.
 
     """
-    # Join (union) subtokens1 to subtokens5, without repetition
-    subtokens = set(subtokens1) | set(subtokens2) | set(subtokens3) |\
-        set(subtokens4) | set(subtokens5)
-    subtokens = set(subtokens)
+    # Join (union) tokens1 to tokens5, without repetition
+    tokens = set(tokens1) | set(tokens2) | set(tokens3) |\
+        set(tokens4) | set(tokens5)
+    tokens = set(tokens)
     # Add tokens to prob_dist with probability = 0
-    for subtoken in subtokens:
-        if subtoken not in prob_dist:
-            prob_dist[subtoken] = float(0)
+    for token in tokens:
+        if token not in prob_dist:
+            prob_dist[token] = float(0)
     return prob_dist
 
 
 def main():
     """Create a Hidden Markov Model."""
     # Name of the model
-    model = HiddenMarkovModel(name="First-Last-Names")
+    model = HiddenMarkovModel(name="Names")
 
-    # Extract tokens from the training sets
-    fn_tokens, pfn_tokens = extract_tokens(config.fn_file)
-    ln1_tokens, pln1_tokens = extract_tokens(config.ln1_file)
-    ln2_tokens, pln2_tokens = extract_tokens(config.ln2_file)
-
-    # Calculate probability distributions for each token set
-    fn_dist = probability_distribution(fn_tokens)
-    pfn_dist = probability_distribution(pfn_tokens)
-    ln1_dist = probability_distribution(ln1_tokens)
-    pln1_dist = probability_distribution(pln1_tokens)
-    ln2_dist = probability_distribution(ln2_tokens)
-    pln2_dist = probability_distribution(pln2_tokens)
+    # Load probability distributions for each token set
+    fn_dist = utils.load_dict_from_file(
+        config.input_dir + config.token_files['first_name']
+    )
+    pfn_dist = utils.load_dict_from_file(
+        config.input_dir + config.token_files['part_first_name']
+    )
+    ln1_dist = utils.load_dict_from_file(
+        config.input_dir + config.token_files['last_name1']
+    )
+    pln1_dist = utils.load_dict_from_file(
+        config.input_dir + config.token_files['part_last_name1']
+    )
+    ln2_dist = utils.load_dict_from_file(
+        config.input_dir + config.token_files['last_name2']
+    )
+    pln2_dist = utils.load_dict_from_file(
+        config.input_dir + config.token_files['part_last_name2']
+    )
 
     # Calculate discrete distributions
     fn_dist = discrete_distribution(
-        fn_dist, pfn_tokens, ln1_tokens, pln1_tokens, ln2_tokens, pln2_tokens
-        )
+        fn_dist, pfn_dist, ln1_dist, pln1_dist, ln2_dist, pln2_dist
+    )
     pfn_dist = discrete_distribution(
-        pfn_dist, fn_tokens, ln1_tokens, pln1_tokens, ln2_tokens, pln2_tokens
+        pfn_dist, fn_dist, ln1_dist, pln1_dist, ln2_dist, pln2_dist
         )
     ln1_dist = discrete_distribution(
-        ln1_dist, fn_tokens, pfn_tokens, pln1_tokens, ln2_tokens, pln2_tokens
+        ln1_dist, fn_dist, pfn_dist, pln1_dist, ln2_dist, pln2_dist
         )
     pln1_dist = discrete_distribution(
-        pln1_dist, fn_tokens, pfn_tokens, ln1_tokens, ln2_tokens, pln2_tokens
+        pln1_dist, fn_dist, pfn_dist, ln1_dist, ln2_dist, pln2_dist
         )
     ln2_dist = discrete_distribution(
-        ln2_dist, fn_tokens, pfn_tokens, ln1_tokens, pln1_tokens, pln2_tokens
+        ln2_dist, fn_dist, pfn_dist, ln1_dist, pln1_dist, pln2_dist
         )
     pln2_dist = discrete_distribution(
-        pln2_dist, fn_tokens, pfn_tokens, ln1_tokens, pln1_tokens, ln2_tokens
+        pln2_dist, fn_dist, pfn_dist, ln1_dist, pln1_dist, ln2_dist
         )
 
     # States of the model
@@ -145,17 +126,20 @@ def main():
         model.add_transition(fn, pfn, 0.010)
         model.add_transition(fn, ln1, 0.648)
         model.add_transition(fn, pln1, 0.008)
-        model.add_transition(pfn, fn, 1)
+        model.add_transition(pfn, pfn, 0.150)
+        model.add_transition(pfn, fn, 0.850)
         model.add_transition(ln1, ln1, 0.010)
         model.add_transition(ln1, pln1, 0.010)
         model.add_transition(ln1, ln2, 0.945)
         model.add_transition(ln1, pln2, 0.001)
         model.add_transition(ln1, model.end, 0.034)
-        model.add_transition(pln1, ln1, 1)
+        model.add_transition(pln1, pln1, 0.150)
+        model.add_transition(pln1, ln1, 0.850)
         model.add_transition(ln2, ln2, 0.004)
         model.add_transition(ln2, pln2, 0.004)
         model.add_transition(ln2, model.end, 0.992)
-        model.add_transition(pln2, ln2, 1)
+        model.add_transition(pln2, pln2, 0.150)
+        model.add_transition(pln2, ln2, 0.850)
     else:
         # Graph for LastName1 LastName2 FirstName sequences
         model.add_transition(model.start, ln1, 0.990)
@@ -165,15 +149,18 @@ def main():
         model.add_transition(ln1, ln2, 0.945)
         model.add_transition(ln1, pln2, 0.001)
         model.add_transition(ln1, fn, 0.034)
-        model.add_transition(pln1, ln1, 1)
+        model.add_transition(pln1, pln1, 0.150)
+        model.add_transition(pln1, ln1, 0.850)
         model.add_transition(ln2, ln2, 0.004)
         model.add_transition(ln2, pln2, 0.004)
         model.add_transition(ln2, fn, 0.992)
-        model.add_transition(pln2, ln2, 1)
+        model.add_transition(pln2, pln2, 0.150)
+        model.add_transition(pln2, ln2, 0.850)
         model.add_transition(fn, fn, 0.334)
         model.add_transition(fn, pfn, 0.010)
         model.add_transition(fn, model.end, 0.656)
-        model.add_transition(pfn, fn, 1)
+        model.add_transition(pfn, pfn, 0.150)
+        model.add_transition(pfn, fn, 0.850)
 
     # "Bake" the model, finalizing its structure
     model.bake(verbose=True)
@@ -181,20 +168,18 @@ def main():
     # Testing the model
     for line in open(config.test_set_file):
         observation = line.strip('\n')
-        norm_observation = tokenizer.unicode(observation)
-        sequence = tokenizer.split_sequence(
-            norm_observation.lower(), config.token_pattern)
-        sequence = tokenizer.subtokens(
-            sequence, config.subtoken_length, config.particles)
+        norm_observation = utils.normalize(observation, config.text_case)
+        words = re.findall(config.word_pattern, norm_observation)
+        sequence = []
+        for word in words:
+            sequence.append(utils.to_token(word, config.token_length))
         # Probability of this sequence
         print(observation)
-        print(sequence)
+        # print(sequence)
         try:
-            """
             # Probability of the given sequence
             print('P(sequence) = ' + str(math.e**model.forward(
                     sequence)[len(sequence), model.end_index]))
-            """
             # Probable series of states given the above sequence
             print(' '.join(
                 state.name for i, state in model.maximum_a_posteriori(
