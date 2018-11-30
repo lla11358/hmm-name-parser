@@ -13,9 +13,8 @@ States:
     LN2 -> last name 2
     PLN2 -> particle of last name 2
 Tokens:
-    - last 4 characters of first name or last name (1 and 2)
-    - particles = '( da | de | de la | de las | de los | del | di | dl |
-                     do | dos | el | ep | i | la | las | los | le | san | van )'
+    - last characters of first name or last name (1 and 2)
+    - particles = config.particles
 
 """
 
@@ -177,9 +176,11 @@ def main():
         print(observation)
         # print(sequence)
         try:
+            """
             # Probability of the given sequence
             print('P(sequence) = ' + str(math.e**model.forward(
                     sequence)[len(sequence), model.end_index]))
+            """
             # Probable series of states given the above sequence
             print(' '.join(
                 state.name for i, state in model.maximum_a_posteriori(
