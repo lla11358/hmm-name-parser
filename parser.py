@@ -18,8 +18,9 @@ Tokens:
 
 """
 
-from pomegranate import HiddenMarkovModel, DiscreteDistribution, State
+import numpy
 import re
+from pomegranate import HiddenMarkovModel, DiscreteDistribution, State
 import config
 import utils
 
@@ -117,7 +118,6 @@ def main():
         )
 
     # Transition probabilities
-    # Obtained from a huge dataset of names
     if config.graph_type == config.graph_types[0]:
         # Graph for FirstName LastName1 LastName2 sequences
         model.add_transition(model.start, fn, 1)
@@ -165,6 +165,66 @@ def main():
     model.bake(verbose=True)
 
     # Testing the model
+    parse_errors = 0
+    value_errors = 0
+    tagged_names = utils.load_dict_from_file(config.test_set_file)
+    for key, value in tagged_names.items():
+        print('Observation: ' + value['observation'])
+        norm_observation = utils.normalize(
+            value['observation'], config.text_case
+        )
+        words = re.findall(config.word_pattern, norm_observation)
+        token_sequence = []
+        for word in words:
+            token_sequence.append(utils.to_token(word, config.token_length))
+
+        test_dict = {
+            'FirstName': '',
+            'LastName1': '',
+            'LastName2': '',
+        }
+        try:
+            j = 0
+            for i, state in model.maximum_a_posteriori(token_sequence)[1]:
+                if state.name[-4:] == 'Name':
+                    test_dict['FirstName'] += words[j] + ' '
+                if state.name[-5:] == 'Name1':
+                    test_dict['LastName1'] += words[j] + ' '
+                if state.name[-5:] == 'Name2':
+                    test_dict['LastName2'] += words[j] + ' '
+                j += 1
+
+            # compare results with tagged names
+            test_dict['FirstName'] = test_dict['FirstName'].rstrip()
+            test_dict['LastName1'] = test_dict['LastName1'].rstrip()
+            test_dict['LastName2'] = test_dict['LastName2'].rstrip()
+            print('Parsed: ' + str(test_dict))
+
+            result = ''
+            for state in ['FirstName', 'LastName1', 'LastName2']:
+                if test_dict[state] == value[state]:
+                    result += ''
+                else:
+                    result += state + ' differs. '
+            if result == '':
+                result = 'Correct.'
+            else:
+                parse_errors += 1
+            print('Result: ' + result)
+        except ValueError as ve:
+            print(ve)
+            value_errors += 1
+
+        print('--')
+
+    # Final statistics
+    print('Summary\n=======')
+    print('Number of observations: ' + str(len(tagged_names)))
+    print('Parse errors:' + str(parse_errors))
+    print('Value errors: ' + str(value_errors))
+    
+    """
+    # Run the model against a text file
     for line in open(config.test_set_file):
         observation = line.strip('\n')
         norm_observation = utils.normalize(observation, config.text_case)
@@ -176,11 +236,9 @@ def main():
         print(observation)
         # print(sequence)
         try:
-            """
             # Probability of the given sequence
             print('P(sequence) = ' + str(math.e**model.forward(
                     sequence)[len(sequence), model.end_index]))
-            """
             # Probable series of states given the above sequence
             print(' '.join(
                 state.name for i, state in model.maximum_a_posteriori(
@@ -189,6 +247,7 @@ def main():
             print(ve)
         finally:
             print('--')
+    """
 
 
 if __name__ == '__main__':
