@@ -6,7 +6,6 @@ text_case = 'lower'
 word_pattern = '([a-z-]+)+'
 # List of particles for first name and last_name
 particles = [
-    'ben',
     'da',
     'das',
     'de',
@@ -18,7 +17,6 @@ particles = [
     'do',
     'dos',
     'du',
-    'el',
     'i',
     'la',
     'las',
@@ -34,7 +32,7 @@ particles = [
     'y'
 ]
 # Length of tokens
-token_length = 3
+token_length = 4
 # Graph types: First Name first or Last Name first
 graph_types = ['FNF', 'LNF']
 graph_type = graph_types[0]
@@ -42,9 +40,9 @@ graph_type = graph_types[0]
 staging_dir = 'data/staging/'
 input_dir = 'data/input/'
 output_dir = 'data/output/'
-fn_file = ['mujeres.csv', 'hombres.csv']
-ln_file = ['apellidos.csv', 'apellidos-20.csv']
-test_set_file = input_dir + 'tagged_names.dict'
+fn_file = 'nombres.csv'
+ln_file = 'apellidos.csv'
+test_set_file = input_dir + 'tagged_names_fnf.dict'
 encoding = 'utf-8'
 # Token files
 token_files = {
