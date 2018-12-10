@@ -35,14 +35,14 @@ particles = [
 token_length = 4
 # Graph types: First Name first or Last Name first
 graph_types = ['FNF', 'LNF']
-graph_type = graph_types[0]
+graph_type = graph_types[1]
 # Raw data files
 staging_dir = 'data/staging/'
 input_dir = 'data/input/'
 output_dir = 'data/output/'
 fn_file = 'nombres.csv'
 ln_file = 'apellidos.csv'
-test_set_file = input_dir + 'tagged_names_fnf.dict'
+test_set_file = input_dir + 'tagged_names_lnf.dict'
 encoding = 'utf-8'
 # Token files
 token_files = {
