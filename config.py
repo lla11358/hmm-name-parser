@@ -34,7 +34,7 @@ particles = [
     'y'
 ]
 # Length of tokens
-token_length = 3
+token_length = 4
 # Graph types: First Name first or Last Name first
 graph_types = ['FNF', 'LNF']
 graph_type = graph_types[0]
@@ -44,7 +44,7 @@ input_dir = 'data/input/'
 output_dir = 'data/output/'
 fn_file = ['mujeres.csv', 'hombres.csv']
 ln_file = ['apellidos.csv', 'apellidos-20.csv']
-test_set_file = input_dir + 'tagged_names.dict'
+test_set_file = input_dir + 'tagged_names_fnf.dict'
 encoding = 'utf-8'
 # Token files
 token_files = {

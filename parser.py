@@ -18,7 +18,7 @@ Tokens:
 
 """
 
-import numpy
+import math
 import re
 from pomegranate import HiddenMarkovModel, DiscreteDistribution, State
 import config
@@ -199,6 +199,10 @@ def main():
             test_dict['LastName1'] = test_dict['LastName1'].rstrip()
             test_dict['LastName2'] = test_dict['LastName2'].rstrip()
             print('Parsed: ' + str(test_dict))
+
+            # Probability of this sequence
+            print('P(sequence) = ' + str(math.e**model.forward(
+                    token_sequence)[len(token_sequence), model.end_index]))
 
             result = ''
             for state in ['FirstName', 'LastName1', 'LastName2']:
