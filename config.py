@@ -6,7 +6,6 @@ text_case = 'lower'
 word_pattern = '([a-z-]+)+'
 # List of particles for first name and last_name
 particles = [
-    'ben',
     'da',
     'das',
     'de',
@@ -18,7 +17,6 @@ particles = [
     'do',
     'dos',
     'du',
-    'el',
     'i',
     'la',
     'las',
@@ -42,8 +40,8 @@ graph_type = graph_types[0]
 staging_dir = 'data/staging/'
 input_dir = 'data/input/'
 output_dir = 'data/output/'
-fn_file = ['mujeres.csv', 'hombres.csv']
-ln_file = ['apellidos.csv', 'apellidos-20.csv']
+fn_file = 'nombres.csv'
+ln_file = 'apellidos.csv'
 test_set_file = input_dir + 'tagged_names_fnf.dict'
 encoding = 'utf-8'
 # Token files
