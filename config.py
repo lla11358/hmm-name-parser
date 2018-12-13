@@ -42,7 +42,7 @@ input_dir = 'data/input/'
 output_dir = 'data/output/'
 fn_file = 'nombres.csv'
 ln_file = 'apellidos.csv'
-test_set_file = input_dir + 'tagged_names_lnf.dict'
+test_set_file = input_dir + 'tagged_names2_lnf.dict'
 encoding = 'utf-8'
 # Token files
 token_files = {
