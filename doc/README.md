@@ -3,6 +3,7 @@
 Data sources:
 + [Apellidos y nombres más frecuentes](http://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736177009&menu=resultados&secc=1254736195454&idp=1254734710990)
 + [spanish-names](https://github.com/marcboquet/spanish-names)
++[Part of speech tagging](https://towardsdatascience.com/part-of-speech-tagging-with-hidden-markov-chain-models-e9fccc835c0e)
 
 ## Parts of speech
 
